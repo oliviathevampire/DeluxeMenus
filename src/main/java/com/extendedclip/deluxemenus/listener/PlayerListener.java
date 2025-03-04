@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class PlayerListener extends Listener {
 
     private final Cache<UUID, Long> cache = CacheBuilder.newBuilder().expireAfterWrite(75, TimeUnit.MILLISECONDS).build();
+    private final Cache<UUID, Integer> clickCache = CacheBuilder.newBuilder().expireAfterWrite(4000, TimeUnit.MILLISECONDS).build();
 
     // This is so dumb. Mojang fix your shit.
     private final Cache<UUID, Long> shiftCache = CacheBuilder.newBuilder().expireAfterWrite(200, TimeUnit.MILLISECONDS).build();
@@ -145,6 +146,7 @@ public class PlayerListener extends Listener {
         }
 
         if (event.getClick() == ClickType.DOUBLE_CLICK) {
+            handleClick(player, holder, item.options().doubleLeftClickHandler(), item.options().doubleLeftClickRequirements());
             return;
         }
 
@@ -169,6 +171,16 @@ public class PlayerListener extends Listener {
         }
 
         if (event.getClick() == ClickType.LEFT) {
+            Integer previousClicks = clickCache.getIfPresent(player.getUniqueId());
+            if (previousClicks == null) previousClicks = 0;
+            clickCache.put(player.getUniqueId(), previousClicks + 1);
+
+            if (previousClicks >= 2) {
+                clickCache.invalidate(player.getUniqueId());
+                if (handleClick(player, holder, item.options().tripleLeftClickHandler(), item.options().tripleLeftClickRequirements())) {
+                    return;
+                }
+            }
             if (handleClick(player, holder, item.options().leftClickHandler(), item.options().leftClickRequirements())) {
                 return;
             }
@@ -181,8 +193,7 @@ public class PlayerListener extends Listener {
         }
 
         if (event.getClick() == ClickType.MIDDLE) {
-            if (handleClick(player, holder, item.options().middleClickHandler(), item.options().middleClickRequirements())) {
-            }
+            handleClick(player, holder, item.options().middleClickHandler(), item.options().middleClickRequirements());
         }
     }
 

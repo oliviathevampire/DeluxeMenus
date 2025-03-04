@@ -2,6 +2,7 @@ package com.extendedclip.deluxemenus.menu.options;
 
 import com.extendedclip.deluxemenus.action.ClickHandler;
 import com.extendedclip.deluxemenus.config.DeluxeMenusConfig;
+import com.extendedclip.deluxemenus.menu.options.LoreAppendMode;
 import com.extendedclip.deluxemenus.requirement.RequirementList;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
@@ -11,13 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class MenuItemOptions {
 
@@ -31,6 +26,7 @@ public class MenuItemOptions {
     private final List<String> lore;
     private final DyeColor baseColor;
     private HeadType headType;
+    private final String placeholderData;
     private final String rgb;
 
     private final String trimMaterial;
@@ -69,6 +65,8 @@ public class MenuItemOptions {
 
     private final ClickHandler clickHandler;
     private final ClickHandler leftClickHandler;
+    private final ClickHandler doubleLeftClickHandler;
+    private final ClickHandler tripleLeftClickHandler;
     private final ClickHandler rightClickHandler;
     private final ClickHandler shiftLeftClickHandler;
     private final ClickHandler shiftRightClickHandler;
@@ -77,10 +75,14 @@ public class MenuItemOptions {
     private final RequirementList viewRequirements;
     private final RequirementList clickRequirements;
     private final RequirementList leftClickRequirements;
+    private final RequirementList doubleLeftClickRequirements;
+    private final RequirementList tripleLeftClickRequirements;
     private final RequirementList rightClickRequirements;
     private final RequirementList shiftLeftClickRequirements;
     private final RequirementList shiftRightClickRequirements;
     private final RequirementList middleClickRequirements;
+
+    private final boolean giveItem;
 
     private MenuItemOptions(final @NotNull MenuItemOptionsBuilder builder) {
         this.material = builder.material;
@@ -95,6 +97,7 @@ public class MenuItemOptions {
         this.loreAppendMode = builder.loreAppendMode;
         this.baseColor = builder.baseColor;
         this.headType = builder.headType;
+        this.placeholderData = builder.placeholderData;
         this.rgb = builder.rgb;
         this.trimMaterial = builder.trimMaterial;
         this.trimPattern = builder.trimPattern;
@@ -123,6 +126,8 @@ public class MenuItemOptions {
         this.updatePlaceholders = builder.updatePlaceholders;
         this.clickHandler = builder.clickHandler;
         this.leftClickHandler = builder.leftClickHandler;
+        this.doubleLeftClickHandler = builder.doubleLeftClickHandler;
+        this.tripleLeftClickHandler = builder.tripleLeftClickHandler;
         this.rightClickHandler = builder.rightClickHandler;
         this.shiftLeftClickHandler = builder.shiftLeftClickHandler;
         this.shiftRightClickHandler = builder.shiftRightClickHandler;
@@ -130,10 +135,13 @@ public class MenuItemOptions {
         this.viewRequirements = builder.viewRequirements;
         this.clickRequirements = builder.clickRequirements;
         this.leftClickRequirements = builder.leftClickRequirements;
+        this.doubleLeftClickRequirements = builder.doubleLeftClickRequirements;
+        this.tripleLeftClickRequirements = builder.tripleLeftClickRequirements;
         this.rightClickRequirements = builder.rightClickRequirements;
         this.shiftLeftClickRequirements = builder.shiftLeftClickRequirements;
         this.shiftRightClickRequirements = builder.shiftRightClickRequirements;
         this.middleClickRequirements = builder.middleClickRequirements;
+        this.giveItem = builder.giveItem;
     }
 
     public static @NotNull MenuItemOptionsBuilder builder() {
@@ -182,6 +190,10 @@ public class MenuItemOptions {
 
     public @NotNull Optional<HeadType> headType() {
         return Optional.ofNullable(headType);
+    }
+
+    public @NotNull Optional<String> placeholderData() {
+        return Optional.ofNullable(placeholderData);
     }
 
     public @NotNull Optional<String> rgb() {
@@ -304,6 +316,14 @@ public class MenuItemOptions {
         return Optional.ofNullable(leftClickHandler);
     }
 
+    public @NotNull Optional<ClickHandler> doubleLeftClickHandler() {
+        return Optional.ofNullable(doubleLeftClickHandler);
+    }
+
+    public @NotNull Optional<ClickHandler> tripleLeftClickHandler() {
+        return Optional.ofNullable(tripleLeftClickHandler);
+    }
+
     public @NotNull Optional<ClickHandler> rightClickHandler() {
         return Optional.ofNullable(rightClickHandler);
     }
@@ -332,6 +352,14 @@ public class MenuItemOptions {
         return Optional.ofNullable(leftClickRequirements);
     }
 
+    public @NotNull Optional<RequirementList> doubleLeftClickRequirements() {
+        return Optional.ofNullable(doubleLeftClickRequirements);
+    }
+
+    public @NotNull Optional<RequirementList> tripleLeftClickRequirements() {
+        return Optional.ofNullable(tripleLeftClickRequirements);
+    }
+
     public @NotNull Optional<RequirementList> rightClickRequirements() {
         return Optional.ofNullable(rightClickRequirements);
     }
@@ -348,6 +376,10 @@ public class MenuItemOptions {
         return Optional.ofNullable(middleClickRequirements);
     }
 
+    public boolean giveItem() {
+        return giveItem;
+    }
+
     public @NotNull MenuItemOptionsBuilder asBuilder() {
         return MenuItemOptions.builder()
                 .material(this.material)
@@ -362,6 +394,7 @@ public class MenuItemOptions {
                 .loreAppendMode(this.loreAppendMode)
                 .baseColor(this.baseColor)
                 .headType(this.headType)
+                .placeholderData(this.placeholderData)
                 .rgb(this.rgb)
                 .trimMaterial(this.trimMaterial)
                 .trimPattern(this.trimPattern)
@@ -388,6 +421,8 @@ public class MenuItemOptions {
                 .updatePlaceholders(this.updatePlaceholders)
                 .clickHandler(this.clickHandler)
                 .leftClickHandler(this.leftClickHandler)
+                .doubleLeftClickHandler(this.doubleLeftClickHandler)
+                .tripleLeftClickHandler(this.tripleLeftClickHandler)
                 .rightClickHandler(this.rightClickHandler)
                 .shiftLeftClickHandler(this.shiftLeftClickHandler)
                 .shiftRightClickHandler(this.shiftRightClickHandler)
@@ -395,10 +430,13 @@ public class MenuItemOptions {
                 .viewRequirements(this.viewRequirements)
                 .clickRequirements(this.clickRequirements)
                 .leftClickRequirements(this.leftClickRequirements)
+                .tripleLeftClickRequirements(this.tripleLeftClickRequirements)
+                .doubleLeftClickRequirements(this.doubleLeftClickRequirements)
                 .rightClickRequirements(this.rightClickRequirements)
                 .shiftLeftClickRequirements(this.shiftLeftClickRequirements)
                 .shiftRightClickRequirements(this.shiftRightClickRequirements)
-                .middleClickRequirements(this.middleClickRequirements);
+                .middleClickRequirements(this.middleClickRequirements)
+                .giveItem(this.giveItem);
     }
 
     public static class MenuItemOptionsBuilder {
@@ -413,6 +451,7 @@ public class MenuItemOptions {
         private List<String> lore = Collections.emptyList();
         private DyeColor baseColor;
         private HeadType headType;
+        private String placeholderData;
         private String rgb;
 
         private String trimMaterial;
@@ -451,6 +490,8 @@ public class MenuItemOptions {
 
         private ClickHandler clickHandler;
         private ClickHandler leftClickHandler;
+        private ClickHandler doubleLeftClickHandler;
+        private ClickHandler tripleLeftClickHandler;
         private ClickHandler rightClickHandler;
         private ClickHandler shiftLeftClickHandler;
         private ClickHandler shiftRightClickHandler;
@@ -459,10 +500,14 @@ public class MenuItemOptions {
         private RequirementList viewRequirements;
         private RequirementList clickRequirements;
         private RequirementList leftClickRequirements;
+        private RequirementList doubleLeftClickRequirements;
+        private RequirementList tripleLeftClickRequirements;
         private RequirementList rightClickRequirements;
         private RequirementList shiftLeftClickRequirements;
         private RequirementList shiftRightClickRequirements;
         private RequirementList middleClickRequirements;
+
+        private boolean giveItem;
 
         private MenuItemOptionsBuilder() {
         }
@@ -518,6 +563,11 @@ public class MenuItemOptions {
 
         public MenuItemOptionsBuilder headType(final @Nullable HeadType headType) {
             this.headType = headType;
+            return this;
+        }
+
+        public MenuItemOptionsBuilder placeholderData(final @Nullable String placeholderData) {
+            this.placeholderData = placeholderData;
             return this;
         }
 
@@ -612,6 +662,21 @@ public class MenuItemOptions {
          * @deprecated Use {@link #itemFlags(Collection)} with {@link ItemFlag#HIDE_UNBREAKABLE}
          */
         @Deprecated
+        public MenuItemOptionsBuilder hidePotionEffects(final boolean hidePotionEffects) {
+            if (hidePotionEffects) {
+                try {
+                    this.itemFlags.add(ItemFlag.HIDE_POTION_EFFECTS);
+                } catch (Throwable ignored) {
+                    this.itemFlags.add(ItemFlag.valueOf("HIDE_ITEM_SPECIFICS"));
+                }
+            }
+            return this;
+        }
+
+        /**
+         * @deprecated Use {@link #itemFlags(Collection)} with {@link ItemFlag#HIDE_UNBREAKABLE}
+         */
+        @Deprecated
         public MenuItemOptionsBuilder hideUnbreakable(final boolean hideUnbreakable) {
             if (hideUnbreakable) {
                 this.itemFlags.add(ItemFlag.HIDE_UNBREAKABLE);
@@ -694,6 +759,16 @@ public class MenuItemOptions {
             return this;
         }
 
+        public MenuItemOptionsBuilder doubleLeftClickHandler(final @Nullable ClickHandler doubleLeftClickHandler) {
+            this.doubleLeftClickHandler = doubleLeftClickHandler;
+            return this;
+        }
+
+        public MenuItemOptionsBuilder tripleLeftClickHandler(final @Nullable ClickHandler tripleLeftClickHandler) {
+            this.tripleLeftClickHandler = tripleLeftClickHandler;
+            return this;
+        }
+
         public MenuItemOptionsBuilder rightClickHandler(final @Nullable ClickHandler rightClickHandler) {
             this.rightClickHandler = rightClickHandler;
             return this;
@@ -729,6 +804,16 @@ public class MenuItemOptions {
             return this;
         }
 
+        public MenuItemOptionsBuilder doubleLeftClickRequirements(final @Nullable RequirementList doubleLeftClickRequirements) {
+            this.doubleLeftClickRequirements = doubleLeftClickRequirements;
+            return this;
+        }
+
+        public MenuItemOptionsBuilder tripleLeftClickRequirements(final @Nullable RequirementList tripleLeftClickRequirements) {
+            this.tripleLeftClickRequirements = tripleLeftClickRequirements;
+            return this;
+        }
+
         public MenuItemOptionsBuilder rightClickRequirements(final @Nullable RequirementList rightClickRequirements) {
             this.rightClickRequirements = rightClickRequirements;
             return this;
@@ -746,6 +831,11 @@ public class MenuItemOptions {
 
         public MenuItemOptionsBuilder middleClickRequirements(final @Nullable RequirementList middleClickRequirements) {
             this.middleClickRequirements = middleClickRequirements;
+            return this;
+        }
+
+        public MenuItemOptionsBuilder giveItem(final boolean giveItem) {
+            this.giveItem = giveItem;
             return this;
         }
 

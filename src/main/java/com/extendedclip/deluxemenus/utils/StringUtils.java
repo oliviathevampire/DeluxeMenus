@@ -25,9 +25,23 @@ public class StringUtils {
      */
     @NotNull
     public static String color(@NotNull String input) {
+        if (StringUtils.isBlank(input)) return input;
+
         // Hex Support for 1.16.1+
         Matcher m = HEX_PATTERN.matcher(input);
         if (VersionHelper.IS_HEX_VERSION) {
+            try {
+                Class<?> rgbUtilsClass = Class.forName("me.neznamy.tab.shared.chat.rgb.RGBUtils");
+                Object rgbUtils = rgbUtilsClass.getMethod("getInstance").invoke(null);
+
+                if (rgbUtils != null) input = (String) rgbUtils.getClass().getMethod("applyCleanGradients", String.class).invoke(rgbUtils, input);
+            } catch (Throwable ignored) {}
+
+            input = HexUtils.parseRainbow(input);
+            input = HexUtils.parseGradients(input);
+            input = HexUtils.parseHex(input);
+            input = HexUtils.parseLegacy(input);
+
             while (m.find()) {
                 input = input.replace(m.group(), ChatColor.of(m.group(1)).toString());
             }
@@ -72,5 +86,9 @@ public class StringUtils {
         }
 
         return input;
+    }
+
+    public static boolean isBlank(String value) {
+        return value == null || value.isEmpty() || value.trim().isEmpty();
     }
 }
