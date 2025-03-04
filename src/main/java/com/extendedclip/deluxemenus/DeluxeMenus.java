@@ -273,8 +273,12 @@ public class DeluxeMenus extends JavaPlugin {
             this.itemHooks.put("oraxen", new OraxenHook());
         }
 
+        if (Bukkit.getPluginManager().isPluginEnabled("Nexo")) {
+            this.itemHooks.put("nexo", new NexoHook());
+        }
+
         if (Bukkit.getPluginManager().isPluginEnabled("MMOItems")) {
-            this.itemHooks.put("mmoitems", new MMOItemsHook(this));
+            this.itemHooks.put("mmoitems", new MMOItemsHook());
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("ExecutableItems")) {
